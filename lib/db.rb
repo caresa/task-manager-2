@@ -8,36 +8,37 @@ class DB
       build_tables
     end
 
-    def build_tables
-      @db.exec(%Q[
-         CREATE TABLE IF NOT EXISTS projects(
-           id serial NOT NULL PRIMARY KEY,
-           name varchar(30)
-         )])
+   def build_tables
+     @db.exec(%q[
+       CREATE TABLE IF NOT EXISTS projects(
+         id serial NOT NULL PRIMARY KEY,
+         name varchar(30)
+       )])
 
-       @db.exec(%q[
-        CREATE TABLE IF NOT EXISTS tasks(
+     @db.exec(%q[
+       CREATE TABLE IF NOT EXISTS tasks(
+         id serial NOT NULL PRIMARY KEY,
+         project_id integer REFERENCES projects(id),
+         priority integer,
+         description text,
+         status varchar(10),
+         created_at timestamp NOT NULL DEFAULT current_timestamp
+       )])
+    end
+
+     @db.exec(%Q[
+        CREATE TABLE IF NOT EXISTS employees(
           id serial NOT NULL PRIMARY KEY,
-          project_id integer REFERENCES projects(id),
-          priority integer,
-          description text,
-          status varchar(10),
-          created_at timestamp NOT NULL DEFAULT current_timestamp
-        )])
-
-       # @db.exec(%Q[
-       #    CREATE TABLE IF NOT EXISTS employees(
-       #      id serial NOT NULL PRIMARY KEY,
-       #      task_id integer REFERENCES tasks(id),
-       #      name varchar(20),
-       #      task
-       #      )])
+          task_id integer REFERENCES tasks(id),
+          name varchar(20),
+          task
+          )])
 
        # @db.exec(%Q[
        #  CREATE TABLE IF NOT EXISTS
        #  ])
 
-    end
+
 
     def create_project(name)
       name = data["name"]
